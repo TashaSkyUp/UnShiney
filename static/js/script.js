@@ -1,24 +1,71 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ------- Tab Navigation ----------
-    const tabLinks = document.querySelectorAll('.main-nav a');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Remove active class from all tabs
-            tabLinks.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            // Add active class to clicked tab
-            this.classList.add('active');
-            
-            // Show corresponding content
-            const tabId = this.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
+    // Direct tab system implementation without relying on CSS transitions
+    function setupTabSystem() {
+        // Get all tab links and content divs
+        const tabLinks = document.querySelectorAll('.main-nav a');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        console.log("Setting up tab system...");
+        console.log(`Found ${tabLinks.length} tab links and ${tabContents.length} tab contents`);
+        
+        if (tabLinks.length === 0) {
+            console.error("No tab links found! Check the HTML structure.");
+            return;
+        }
+        
+        // Hide all tab contents initially (explicit style, not just classes)
+        tabContents.forEach(content => {
+            content.style.display = 'none';
         });
-    });
+        
+        // Setup click handlers
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const tabId = this.getAttribute('data-tab');
+                if (!tabId) {
+                    console.error("Tab link missing data-tab attribute", this);
+                    return;
+                }
+                
+                // Log which tab was clicked
+                console.log(`Switching to tab: ${tabId}`);
+                
+                // Hide all tabs
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                    content.classList.remove('active');
+                });
+                
+                // Remove active class from all links
+                tabLinks.forEach(tabLink => {
+                    tabLink.classList.remove('active');
+                });
+                
+                // Show the selected tab
+                const selectedTab = document.getElementById(tabId);
+                if (selectedTab) {
+                    selectedTab.style.display = 'block';
+                    selectedTab.classList.add('active');
+                    this.classList.add('active');
+                } else {
+                    console.error(`Tab content with ID "${tabId}" not found`);
+                }
+            });
+        });
+        
+        // Activate the first tab by default
+        console.log("Activating default tab (process-tab)");
+        const processTab = document.querySelector('.main-nav a[data-tab="process-tab"]');
+        if (processTab) {
+            processTab.click();
+        } else {
+            console.warn("Process tab not found, clicking first tab instead");
+            tabLinks[0].click();
+        }
+    }
     
     // ------- Process Tab Elements ----------
     const uploadArea = document.getElementById('upload-area');
@@ -199,12 +246,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ------- Dataset Tab Functions ----------
     
-    // Make the pair upload section active by default
-    document.getElementById('pair-upload').classList.add('active');
+    // Setup dataset section
+    console.log("Initializing dataset section...");
     
     // Variables for image pair handling
-    let originalImage = null;
-    let cleanImage = null;
+    let originalPairImage = null;
+    let cleanPairImage = null;
     const generateSamplePairsBtn = document.getElementById('generate-sample-pairs-btn');
     
     // Image pair uploads
@@ -891,8 +938,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ------- Initialization ----------
     
-    // Initialize the first tab
-    document.querySelector('.main-nav a.active').click();
+    // Initialize tabs with direct DOM manipulation
+    setupTabSystem();
     
     // Initialize model type
     setModelType('dense');
