@@ -253,29 +253,94 @@ document.addEventListener('DOMContentLoaded', function() {
     let originalPairImage = null;
     let cleanPairImage = null;
     const generateSamplePairsBtn = document.getElementById('generate-sample-pairs-btn');
+    const bulkImportBtn = document.createElement('button');
+    bulkImportBtn.id = 'bulk-import-btn';
+    bulkImportBtn.textContent = 'Bulk Import';
+    generateSamplePairsBtn.after(bulkImportBtn);
     
-    // Image pair uploads
+    // Initialize upload preview visibility
+    originalPairPreview.style.display = 'none';
+    cleanPairPreview.style.display = 'none';
+    
+    // Image pair uploads - file input change events
     originalPairUpload.addEventListener('change', function() {
         if (this.files && this.files.length) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                originalPairPreview.src = e.target.result;
-                originalPairPreview.style.display = 'block';
-                checkPairUploads();
-            };
-            reader.readAsDataURL(this.files[0]);
+            handlePairFile(this.files[0], 'original');
         }
     });
     
     cleanPairUpload.addEventListener('change', function() {
         if (this.files && this.files.length) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+            handlePairFile(this.files[0], 'clean');
+        }
+    });
+    
+    // Handle image file for dataset pairs
+    function handlePairFile(file, type) {
+        if (!file.type.match('image.*')) {
+            alert('Please upload an image file');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (type === 'original') {
+                originalPairPreview.src = e.target.result;
+                originalPairPreview.style.display = 'block';
+            } else {
                 cleanPairPreview.src = e.target.result;
                 cleanPairPreview.style.display = 'block';
-                checkPairUploads();
-            };
-            reader.readAsDataURL(this.files[0]);
+            }
+            checkPairUploads();
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    // Drag and drop for original image upload box
+    const originalUploadBox = document.getElementById('original-upload-box');
+    originalUploadBox.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('dragover');
+    });
+    
+    originalUploadBox.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+    });
+    
+    originalUploadBox.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+        
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+            handlePairFile(e.dataTransfer.files[0], 'original');
+        }
+    });
+    
+    // Drag and drop for clean image upload box
+    const cleanUploadBox = document.getElementById('clean-upload-box');
+    cleanUploadBox.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('dragover');
+    });
+    
+    cleanUploadBox.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+    });
+    
+    cleanUploadBox.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+        
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+            handlePairFile(e.dataTransfer.files[0], 'clean');
         }
     });
     
@@ -440,6 +505,113 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         input.click();
+    });
+    
+    // Bulk import feature
+    bulkImportBtn.addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.multiple = true;
+        
+        input.onchange = e => {
+            const files = Array.from(e.target.files);
+            
+            if (files.length === 0) return;
+            
+            // Sort files by name to try and match pairs
+            files.sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Show a message about how files will be paired
+            if (files.length % 2 !== 0) {
+                alert('Warning: You uploaded an odd number of files. Files will be paired in sequence (1st with 2nd, 3rd with 4th, etc.). The last file will be ignored.');
+            } else {
+                alert('Files will be paired in sequence (1st with 2nd, 3rd with 4th, etc.). Make sure your files are ordered correctly!');
+            }
+            
+            // Process pairs
+            for (let i = 0; i < files.length - 1; i += 2) {
+                const originalFile = files[i];
+                const cleanFile = files[i + 1];
+                
+                // Process the pair
+                processBulkPair(originalFile, cleanFile);
+            }
+        };
+        
+        input.click();
+    });
+    
+    // Process a pair of files from bulk import
+    function processBulkPair(originalFile, cleanFile) {
+        // Create FileReader for original image
+        const originalReader = new FileReader();
+        originalReader.onload = function(e) {
+            const originalDataUrl = e.target.result;
+            
+            // Create FileReader for clean image
+            const cleanReader = new FileReader();
+            cleanReader.onload = function(e) {
+                const cleanDataUrl = e.target.result;
+                
+                // Add the pair to the dataset
+                addToDataset(originalDataUrl, cleanDataUrl);
+            };
+            
+            // Read clean file
+            cleanReader.readAsDataURL(cleanFile);
+        };
+        
+        // Read original file
+        originalReader.readAsDataURL(originalFile);
+    }
+    
+    // Add drag and drop functionality for the dataset gallery container
+    datasetGalleryContainer.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('dragover');
+    });
+    
+    datasetGalleryContainer.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+    });
+    
+    datasetGalleryContainer.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+        
+        // Handle files dropped directly to gallery
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+            const files = Array.from(e.dataTransfer.files);
+            
+            // If we have exactly 2 files, treat as a pair
+            if (files.length === 2) {
+                processBulkPair(files[0], files[1]);
+                return;
+            }
+            
+            // If we have more files, handle as bulk import
+            if (files.length > 0) {
+                // Sort files by name
+                files.sort((a, b) => a.name.localeCompare(b.name));
+                
+                // Process pairs
+                for (let i = 0; i < files.length - 1; i += 2) {
+                    const originalFile = files[i];
+                    const cleanFile = files[i + 1];
+                    processBulkPair(originalFile, cleanFile);
+                }
+                
+                // Notify if odd number
+                if (files.length % 2 !== 0) {
+                    alert('Note: You dropped an odd number of files. The last file was ignored.');
+                }
+            }
+        }
     });
     
     // ------- Model Builder Functions ----------

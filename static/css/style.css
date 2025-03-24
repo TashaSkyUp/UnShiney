@@ -292,6 +292,17 @@ button.active {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-box:hover {
+    background-color: #f9f9f9;
+}
+
+.upload-box.dragover {
+    background-color: #e1f5fe;
+    border-color: #3498db;
 }
 
 .upload-label {
@@ -310,6 +321,25 @@ button.active {
     border-radius: 4px;
 }
 
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    margin: 10px 0;
+}
+
+.upload-placeholder svg {
+    fill: #3498db;
+    margin-bottom: 10px;
+}
+
+.upload-placeholder p {
+    color: #777;
+    font-size: 14px;
+}
+
 .dataset-gallery {
     margin-top: 40px;
 }
@@ -321,9 +351,15 @@ button.active {
     justify-content: flex-start;
     margin: 20px 0;
     min-height: 100px;
-    border: 1px solid #eee;
+    border: 2px dashed #ddd;
     border-radius: 4px;
     padding: 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.gallery-container.dragover {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-color: #3498db;
 }
 
 .gallery-item {

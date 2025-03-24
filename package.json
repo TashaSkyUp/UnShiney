@@ -1,0 +1,40 @@
+{
+  "name": "unshiney-web-demo",
+  "version": "1.0.0",
+  "description": "Web demonstration of the UnShiney image processing project",
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py",
+    "test": "python tests/run_tests.py && jest tests/frontend",
+    "test:backend": "python tests/run_tests.py",
+    "test:frontend": "jest tests/frontend",
+    "test:coverage": "jest --coverage tests/frontend && coverage run -m unittest discover -s tests/backend && coverage report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TashaSkyUp/UnShiney.git"
+  },
+  "keywords": [
+    "neural-networks",
+    "image-processing",
+    "flask",
+    "deep-learning"
+  ],
+  "author": "TashaSkyUp",
+  "license": "MIT",
+  "devDependencies": {
+    "@testing-library/dom": "^8.20.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/frontend/jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "<rootDir>/tests/frontend/styleMock.js"
+    }
+  }
+}
