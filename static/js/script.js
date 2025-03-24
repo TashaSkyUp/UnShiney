@@ -253,10 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let originalPairImage = null;
     let cleanPairImage = null;
     const generateSamplePairsBtn = document.getElementById('generate-sample-pairs-btn');
-    const bulkImportBtn = document.createElement('button');
-    bulkImportBtn.id = 'bulk-import-btn';
-    bulkImportBtn.textContent = 'Bulk Import';
-    generateSamplePairsBtn.after(bulkImportBtn);
+    const bulkImportBtn = document.getElementById('bulk-import-btn');
     
     // Initialize upload preview visibility
     originalPairPreview.style.display = 'none';
