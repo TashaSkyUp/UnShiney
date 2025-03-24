@@ -11,69 +11,268 @@
         <header>
             <h1>UnShiney Mask Demo</h1>
             <p>Upload an image to remove shine and reflections</p>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="active" data-tab="process-tab">Process</a></li>
+                    <li><a href="#" data-tab="dataset-tab">Custom Dataset</a></li>
+                    <li><a href="#" data-tab="model-tab">Model Builder</a></li>
+                    <li><a href="#" data-tab="about-tab">About</a></li>
+                </ul>
+            </nav>
         </header>
         
-        <div class="upload-section">
-            <div class="upload-area" id="upload-area">
-                <input type="file" id="image-upload" accept="image/*">
-                <div class="upload-placeholder" id="upload-placeholder">
-                    <svg width="50" height="50" viewBox="0 0 24 24">
-                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
-                    </svg>
-                    <p>Drag & drop an image here or click to upload</p>
+        <!-- Process Tab -->
+        <div class="tab-content active" id="process-tab">
+            <div class="upload-section">
+                <div class="upload-area" id="upload-area">
+                    <input type="file" id="image-upload" accept="image/*">
+                    <div class="upload-placeholder" id="upload-placeholder">
+                        <svg width="50" height="50" viewBox="0 0 24 24">
+                            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+                        </svg>
+                        <p>Drag & drop an image here or click to upload</p>
+                    </div>
+                    <div class="preview-area" id="preview-area" hidden>
+                        <img id="preview-image" alt="Preview">
+                    </div>
                 </div>
-                <div class="preview-area" id="preview-area" hidden>
-                    <img id="preview-image" alt="Preview">
+                <div class="model-quick-select">
+                    <select id="model-select">
+                        <option value="">Select a saved model configuration</option>
+                        <option value="default-dense">Default Dense</option>
+                        <option value="default-conv">Default Convolutional</option>
+                        <option value="default-hybrid">Default Hybrid</option>
+                    </select>
                 </div>
+                <button id="process-btn" disabled>Process Image</button>
             </div>
-            <button id="process-btn" disabled>Process Image</button>
-        </div>
-        
-        <div class="results-section" id="results-section" hidden>
-            <h2>Results</h2>
-            <div class="image-comparison">
-                <div class="original">
-                    <h3>Original Image</h3>
-                    <img id="original-image" alt="Original Image">
-                </div>
-                <div class="processed">
-                    <h3>Processed Image</h3>
-                    <img id="processed-image" alt="Processed Image">
-                </div>
-            </div>
-        </div>
-        
-        <div class="model-section">
-            <h2>Model Options</h2>
-            <div class="model-selection">
-                <h3>Select Model Architecture</h3>
-                <select id="model-type">
-                    <option value="dense">Fully Connected</option>
-                    <option value="conv">Convolutional</option>
-                    <option value="hybrid">Hybrid</option>
-                </select>
-            </div>
-            <button id="train-btn">Train Model</button>
-            <div class="training-status" id="training-status" hidden>
-                <p>Training in progress...</p>
-                <div class="progress-bar">
-                    <div class="progress" id="progress-bar"></div>
+            
+            <div class="results-section" id="results-section" hidden>
+                <h2>Results</h2>
+                <div class="image-comparison">
+                    <div class="original">
+                        <h3>Original Image</h3>
+                        <img id="original-image" alt="Original Image">
+                    </div>
+                    <div class="processed">
+                        <h3>Processed Image</h3>
+                        <img id="processed-image" alt="Processed Image">
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="about-section">
-            <h2>About UnShiney</h2>
-            <p>UnShiney is a deep learning project that uses neural networks to remove shine, glare, and reflections from images. The model takes grayscale images as input and produces processed images with reduced shine.</p>
-            <p>This web demo showcases several model architectures:</p>
-            <ul>
-                <li><strong>Fully Connected</strong>: A dense neural network that processes the entire image at once</li>
-                <li><strong>Convolutional</strong>: Uses convolutional layers to process local patterns in the image</li>
-                <li><strong>Hybrid</strong>: Combines convolutional and dense layers for processing</li>
-            </ul>
+        <!-- Dataset Tab -->
+        <div class="tab-content" id="dataset-tab">
+            <h2>Custom Dataset Builder</h2>
+            <p>Create a dataset by uploading pairs of images - original with shine and the same image with shine removed.</p>
+            
+            <div class="dataset-controls">
+                <div class="dataset-upload" id="pair-upload">
+                    <h3>Upload Original & Clean Image Pairs</h3>
+                    <div class="pair-upload-container">
+                        <div class="pair-item">
+                            <div class="upload-box" id="original-upload-box">
+                                <div class="upload-label">Original Image (with shine)</div>
+                                <input type="file" id="original-pair-upload" accept="image/*">
+                                <div class="upload-preview">
+                                    <img id="original-pair-preview" alt="Original Preview">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pair-item">
+                            <div class="upload-box" id="clean-upload-box">
+                                <div class="upload-label">Clean Image (without shine)</div>
+                                <input type="file" id="clean-pair-upload" accept="image/*">
+                                <div class="upload-preview">
+                                    <img id="clean-pair-preview" alt="Clean Preview">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pair-controls">
+                        <button id="add-pair-to-dataset-btn" disabled>Add Pair to Dataset</button>
+                        <button id="generate-sample-pairs-btn">Generate Sample Pairs</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dataset-gallery">
+                <h3>Current Dataset <span id="dataset-count">(0 items)</span></h3>
+                <div class="gallery-container" id="dataset-gallery-container">
+                    <!-- Dataset items will be added here dynamically -->
+                </div>
+                <div class="dataset-actions">
+                    <button id="clear-dataset-btn" disabled>Clear Dataset</button>
+                    <button id="save-dataset-btn" disabled>Save Dataset</button>
+                    <button id="load-dataset-btn">Load Dataset</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Model Tab -->
+        <div class="tab-content" id="model-tab">
+            <h2>Model Builder</h2>
+            <p>Customize your UnShiney model's architecture and training parameters.</p>
+            
+            <div class="model-builder">
+                <div class="model-type-selector">
+                    <h3>Model Type</h3>
+                    <div class="model-type-buttons">
+                        <button id="dense-model-btn" class="active">Fully Connected</button>
+                        <button id="conv-model-btn">Convolutional</button>
+                        <button id="hybrid-model-btn">Hybrid</button>
+                        <button id="custom-model-btn">Custom</button>
+                    </div>
+                </div>
+                
+                <div class="model-architecture">
+                    <h3>Architecture</h3>
+                    <div class="architecture-visualization" id="architecture-vis">
+                        <!-- Visual representation of network layers will go here -->
+                    </div>
+                    <div class="layer-controls">
+                        <button id="add-layer-btn">Add Layer</button>
+                        <select id="layer-type-select">
+                            <option value="dense">Dense Layer</option>
+                            <option value="conv2d">Conv2D Layer</option>
+                            <option value="maxpool">MaxPooling2D</option>
+                            <option value="dropout">Dropout</option>
+                            <option value="flatten">Flatten</option>
+                        </select>
+                    </div>
+                    <div id="layers-container">
+                        <!-- Layer configuration items will be added here -->
+                    </div>
+                </div>
+                
+                <div class="training-params">
+                    <h3>Training Parameters</h3>
+                    <div class="param-row">
+                        <div class="param-group">
+                            <label for="learning-rate">Learning Rate:</label>
+                            <input type="number" id="learning-rate" min="0.00001" max="0.1" step="0.00001" value="0.00025">
+                        </div>
+                        <div class="param-group">
+                            <label for="batch-size">Batch Size:</label>
+                            <input type="number" id="batch-size" min="1" max="128" step="1" value="32">
+                        </div>
+                    </div>
+                    <div class="param-row">
+                        <div class="param-group">
+                            <label for="epochs">Epochs:</label>
+                            <input type="number" id="epochs" min="1" max="100" step="1" value="10">
+                        </div>
+                        <div class="param-group">
+                            <label for="validation-split">Validation Split:</label>
+                            <input type="number" id="validation-split" min="0.1" max="0.5" step="0.05" value="0.2">
+                        </div>
+                    </div>
+                    <div class="param-row">
+                        <div class="param-group">
+                            <label for="optimizer-select">Optimizer:</label>
+                            <select id="optimizer-select">
+                                <option value="adam">Adam</option>
+                                <option value="sgd">SGD</option>
+                                <option value="rmsprop">RMSprop</option>
+                            </select>
+                        </div>
+                        <div class="param-group">
+                            <label for="loss-function">Loss Function:</label>
+                            <select id="loss-function">
+                                <option value="mae">Mean Absolute Error</option>
+                                <option value="mse">Mean Squared Error</option>
+                                <option value="binary_crossentropy">Binary Crossentropy</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-actions">
+                    <button id="save-model-config-btn">Save Configuration</button>
+                    <button id="load-model-config-btn">Load Configuration</button>
+                    <button id="train-model-btn">Train Model</button>
+                </div>
+                
+                <div class="training-status" id="advanced-training-status" hidden>
+                    <h3>Training Progress</h3>
+                    <div class="progress-details">
+                        <div class="progress-info">
+                            <span>Epoch: <span id="current-epoch">0</span>/<span id="total-epochs">0</span></span>
+                            <span>Loss: <span id="current-loss">0</span></span>
+                            <span>Validation Loss: <span id="current-val-loss">0</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress" id="advanced-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="training-charts">
+                        <canvas id="loss-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Tab -->
+        <div class="tab-content" id="about-tab">
+            <div class="about-section">
+                <h2>About UnShiney</h2>
+                <p>UnShiney is a deep learning project that uses neural networks to remove shine, glare, and reflections from images. The model takes grayscale images as input and produces processed images with reduced shine.</p>
+                
+                <h3>Model Architectures</h3>
+                <ul>
+                    <li><strong>Fully Connected</strong>: A dense neural network that processes the entire image at once. Good for smaller images and simple shine patterns.</li>
+                    <li><strong>Convolutional</strong>: Uses convolutional layers to process local patterns in the image. Effective for detecting spatial features like shine and reflections.</li>
+                    <li><strong>Hybrid</strong>: Combines convolutional and dense layers for processing. Leverages the strengths of both approaches.</li>
+                    <li><strong>Custom</strong>: Build your own architecture by stacking layers with custom parameters.</li>
+                </ul>
+                
+                <h3>How It Works</h3>
+                <p>The neural network is trained on pairs of images: ones with shine/glare and their "clean" counterparts. During training, the model learns to map from the shiny version to the clean version.</p>
+                <p>When you upload a new image, the model processes it to remove shine based on the patterns it learned during training.</p>
+                
+                <h3>Custom Dataset Builder</h3>
+                <p>You can create your own custom training dataset by:</p>
+                <ul>
+                    <li><strong>Upload Image Pairs</strong>: Provide matching pairs of images - the original with shine/reflections and the same image with shine removed.</li>
+                    <li><strong>Generate Sample Data</strong>: Use the built-in sample generator to create synthetic training data.</li>
+                    <li><strong>Save & Load Datasets</strong>: Save your datasets to reuse them later or share with others.</li>
+                </ul>
+                
+                <h3>Model Builder</h3>
+                <p>The model builder lets you customize your network architecture by:</p>
+                <ul>
+                    <li>Adding and configuring different layer types</li>
+                    <li>Setting training parameters like learning rate and batch size</li>
+                    <li>Saving and loading model configurations</li>
+                    <li>Visualizing training progress</li>
+                </ul>
+            </div>
         </div>
     </div>
     
+    <!-- Modal for saving configurations -->
+    <div class="modal" id="save-config-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Save Configuration</h3>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label for="config-name">Configuration Name:</label>
+                    <input type="text" id="config-name" placeholder="My UnShiney Config">
+                </div>
+                <div class="form-group">
+                    <label for="config-description">Description (optional):</label>
+                    <textarea id="config-description" placeholder="A brief description of this configuration"></textarea>
+                </div>
+                <button id="confirm-save-config">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
