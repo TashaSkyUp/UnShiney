@@ -5,10 +5,10 @@
   "main": "app.py",
   "scripts": {
     "start": "python app.py",
-    "test": "python tests/run_tests.py && jest tests/frontend",
+    "test": "python tests/run_tests.py && jest",
     "test:backend": "python tests/run_tests.py",
-    "test:frontend": "jest tests/frontend",
-    "test:coverage": "jest --coverage tests/frontend && coverage run -m unittest discover -s tests/backend && coverage report"
+    "test:frontend": "jest",
+    "test:coverage": "jest --coverage && coverage run -m unittest discover -s tests/backend && coverage report"
   },
   "repository": {
     "type": "git",
@@ -30,11 +30,15 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/tests/frontend/**/*.test.js"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/tests/frontend/jest.setup.js"
     ],
     "moduleNameMapper": {
       "\\.(css|less|scss|sass)$": "<rootDir>/tests/frontend/styleMock.js"
-    }
+    },
+    "verbose": true
   }
 }

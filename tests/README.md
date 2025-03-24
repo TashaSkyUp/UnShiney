@@ -10,7 +10,9 @@ tests/
 │   ├── test_app.py  # Tests for Flask application endpoints
 │   └── test_model.py # Tests for UnShineyModel class
 ├── frontend/        # JavaScript tests for client-side code
-│   └── test_drag_drop.js # Tests for drag-and-drop functionality
+│   ├── drag_drop.test.js # Tests for drag-and-drop functionality
+│   ├── jest.setup.js # Jest setup configuration
+│   └── styleMock.js # Mock for CSS imports in tests
 └── run_tests.py     # Script to run all backend tests
 ```
 
@@ -40,8 +42,12 @@ npm install --save-dev jest @testing-library/dom @testing-library/jest-dom
 To run the frontend tests:
 
 ```bash
-npx jest tests/frontend
+npm run test:frontend
+# or directly with npx
+npx jest
 ```
+
+Note: Jest looks for files with a `.test.js` or `.spec.js` extension. Make sure your test files are named accordingly (e.g., `drag_drop.test.js` instead of just `test_drag_drop.js`).
 
 ## Writing New Tests
 
