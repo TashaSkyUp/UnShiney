@@ -75,6 +75,12 @@
                             <div class="upload-box" id="original-upload-box">
                                 <div class="upload-label">Original Image (with shine)</div>
                                 <input type="file" id="original-pair-upload" accept="image/*">
+                                <div class="upload-placeholder">
+                                    <svg width="40" height="40" viewBox="0 0 24 24">
+                                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+                                    </svg>
+                                    <p>Drag & drop image here or click to upload</p>
+                                </div>
                                 <div class="upload-preview">
                                     <img id="original-pair-preview" alt="Original Preview">
                                 </div>
@@ -84,6 +90,12 @@
                             <div class="upload-box" id="clean-upload-box">
                                 <div class="upload-label">Clean Image (without shine)</div>
                                 <input type="file" id="clean-pair-upload" accept="image/*">
+                                <div class="upload-placeholder">
+                                    <svg width="40" height="40" viewBox="0 0 24 24">
+                                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+                                    </svg>
+                                    <p>Drag & drop image here or click to upload</p>
+                                </div>
                                 <div class="upload-preview">
                                     <img id="clean-pair-preview" alt="Clean Preview">
                                 </div>
@@ -93,6 +105,7 @@
                     <div class="pair-controls">
                         <button id="add-pair-to-dataset-btn" disabled>Add Pair to Dataset</button>
                         <button id="generate-sample-pairs-btn">Generate Sample Pairs</button>
+                        <button id="bulk-import-btn">Bulk Import</button>
                     </div>
                 </div>
             </div>
