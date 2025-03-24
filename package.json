@@ -25,6 +25,8 @@
   "devDependencies": {
     "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^5.16.5",
+    "babel-jest": "^29.5.0",
+    "@babel/preset-env": "^7.20.2",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0"
   },
@@ -39,6 +41,24 @@
     "moduleNameMapper": {
       "\\.(css|less|scss|sass)$": "<rootDir>/tests/frontend/styleMock.js"
     },
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ],
     "verbose": true
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
   }
 }

@@ -1,5 +1,5 @@
 // Import Jest DOM extensions for DOM testing capabilities
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Global setup for all tests
 beforeAll(() => {
